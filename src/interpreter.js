@@ -22,6 +22,34 @@ var Interpreter = function () {
 
         var rule = this.base.getRule(prop.id);
 
+        if (rule) {
+            return this.evaluateRule(prop, rule);
+        } else {
+            return this.evaluateFact(prop);
+        }
+    }
+
+    this.evaluateFact = function (prop) {
+        var facts = this.base.getFacts(prop.id);
+        
+        if (facts) {
+            var isProp = false;
+            facts.forEach(function(fact){
+                var isFact = true;
+                prop.args.forEach(function(arg, i){
+                    if (fact.args[i] !== arg) {
+                        isFact = false;
+                    }         
+                })
+                if (isFact) {
+                    isProp = true;
+                }
+            })
+        }
+        return isProp;
+    }
+
+    this.evaluateRule = function(prop, rule) {
         var argMap = this.mapProposition(prop, rule);
         var parsedConds = this.parseConditions(argMap, rule);
 
@@ -68,7 +96,10 @@ var Interpreter = function () {
             cond.args.forEach(function(arg) {
                 parsedArgs.push(argMap[arg]);
             });
-            parsedConds.push(new Atom(cond.id, parsedArgs));        
+
+            var parsedCond = new Atom();
+            parsedCond.buildParsed(cond.id, parsedArgs);
+            parsedConds.push(parsedCond);        
         })
         return parsedConds;
     }

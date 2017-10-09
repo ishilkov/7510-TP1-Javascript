@@ -32,7 +32,7 @@ var Base = function () {
     this.getFacts = function (id) {
         var facts = [];
         this.facts.forEach(function(fact) {
-            if (fact.id = id) {
+            if (fact.id === id) {
                 facts.push(fact);
             }
         }, this);

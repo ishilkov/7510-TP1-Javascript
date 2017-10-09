@@ -1,13 +1,12 @@
-var Atom = function(id, args) {
+var Atom = function() {
     
-    this.id = id;
-    this.args = args; 
+    this.id = null;
+    this.args = []; 
 
     this.build = function(entry) {
         var re = new RegExp('\\s*(\\w+)\\s*\\((\\s*\\w+\\s*[,\\s*\\w+\\s*]*)\\)\\s*');
         var res = re.exec(entry);
         this.id = res[1];
-        this.args = [];
         this.buildArgs(res[2]);
     }
 
@@ -16,6 +15,11 @@ var Atom = function(id, args) {
         while ((match = re.exec(args)) != null) {
             this.args.push(match[1]);
         }
+    }
+
+    this.buildParsed = function(id, args) {
+        this.id = id;
+        this.args = args; 
     }
 }
 
