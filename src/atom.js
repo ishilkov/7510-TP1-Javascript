@@ -6,6 +6,11 @@ var Atom = function() {
     this.build = function(entry) {
         var re = new RegExp('\\s*(\\w+)\\s*\\((\\s*\\w+\\s*[,\\s*\\w+\\s*]*)\\)\\s*');
         var res = re.exec(entry);
+
+        if (!res) {
+            throw new Error("can't parse: " + entry);
+        }
+
         this.id = res[1];
         this.buildArgs(res[2]);
     }

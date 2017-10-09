@@ -4,6 +4,102 @@ var assert = require('assert');
 
 var Interpreter = require('../src/interpreter');
 
+describe("DB Build", function () {
+
+    var interpreter = null;
+
+    beforeEach(function () {
+        // runs before each test in this block
+        interpreter = new Interpreter();
+    });
+
+    describe('Corrupted Facts', function () {
+        
+        var corruptedFactDB = [
+            "varon(juan).",
+            "varon(pepe.",
+        ]
+
+        it("'varon(pepe' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedFactDB)).to.throw(Error, "can't parse: varon(pepe");
+        });
+
+        var corruptedFactDB2 = [
+            "varon(juan).",
+            "varon.",
+        ]
+
+        it("'varon' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedFactDB2)).to.throw(Error, "can't parse: varon");
+        });
+    })
+})
+
+describe("DB Build With Facts", function () {
+
+    describe('Corrupted Facts', function () {
+        
+        var interpreter = null;
+
+        beforeEach(function () {
+            // runs before each test in this block
+            interpreter = new Interpreter();
+        });
+
+        var corruptedFactDB = [
+            "varon(juan).",
+            "varon(pepe.",
+        ]
+
+        it("'varon(pepe' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedFactDB)).to.throw(Error, "can't parse: varon(pepe");
+        });
+
+        var corruptedFactDB2 = [
+            "varon(juan).",
+            "varon.",
+        ]
+
+        it("'varon' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedFactDB2)).to.throw(Error, "can't parse: varon");
+        });
+    })
+})
+
+describe("DB Build With Rules", function () {
+
+    describe('Corrupted Rules', function () {
+        
+        var interpreter = null;
+        
+        beforeEach(function () {
+            // runs before each test in this block
+            interpreter = new Interpreter();
+        });
+
+
+        var corruptedRuleDB = [
+            "varon(juan).",
+            "varon(pepe).",
+            "padre(X, Y) :- ."
+        ]
+
+        it("'padre(X, Y) :- ' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedRuleDB)).to.throw(Error, "can't parse rule: padre(X, Y) :- ");
+        });
+
+        var corruptedRuleDB2 = [
+            "varon(juan).",
+            "varon(pepe).",
+            "padre(X, Y) :- varon(Y), (Y, .",
+        ]
+
+        it("'padre(X, Y) :- varon(Y), (Y, ' should throw exception", function () {
+            expect(() => interpreter.parseDB(corruptedRuleDB2)).to.throw(Error, "can't parse rule: padre(X, Y) :- varon(Y), (Y, ");
+        });
+    })
+})
+
 
 describe("Interpreter", function () {
 
